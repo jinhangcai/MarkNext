@@ -2,7 +2,6 @@ import axios from 'axios';
 import md5 from 'md5';
 import { message } from 'antd';
 import { getToken, toLogin, SSRGetToken } from "./util";
-
 let diffTime = 0;
 
 let fetcher = axios.create({
@@ -32,16 +31,12 @@ const codeMessage = {
 }
 
 function checkStatus(response) {
-    const { status, data, data: { data: businessData, msg }, config, config: { url }, headers } = response;
+    console.log('config-response', response)
+    return;
+    const { status, data, data: { data: businessData, msg }, config, config: { headers: { referer, content } }, config: { url }, headers } = response;
     if (status >= 200 && status < 300) {
         const { code } = data;
         const numCode = Number(code);
-        // console.log('response', response.config.headers.content)
-        // const content = response?.config?.headers?.content
-        // response.config.headers.content.writeHead(301, { location: "https://www.baidu.com/" } );
-        // response.config.headers.content.end();
-        // console.log('response1', response, response.redirect, response.send)
-        // toLogin(response?.config?.headers?.referer, response.config.headers.content); // 登录失效跳转登录
         if (numCode !== 200) {
             // 输出错误信息，包括请求地址，错误码，错误提示
             console.error(
@@ -49,7 +44,6 @@ function checkStatus(response) {
                 code is ${numCode},
                 msg is ${msg}`
             );
-
             // 如果超时，则重新请求一次
             if (numCode === 2001109 || numCode === 117006) {
                 const serverTime = headers && headers['server-timestamp'] || 0; // 上一次服务器时间
@@ -58,6 +52,7 @@ function checkStatus(response) {
                 return fetcher(url, config);
             } else if (numCode === 117001 || numCode === 2001106) {
                 // toLogin(response?.config?.headers?.referer, response.config.headers.content); // 登录失效跳转登录
+                toLogin(referer, content); // 登录失效跳转登录
             } else {
                 message.error(msg);
             }
@@ -73,23 +68,18 @@ function checkStatus(response) {
 // 添加请求拦截器
 fetcher.interceptors.request.use((config) => {
     const { headers = {}, params = {} } = config;
+    // console.log('config', config)
     //添加时间戳，防止cache.
-    // console.log('config', config, config.content.req.headers)
     const _ = Date.now();
-    const token = config.content ? SSRGetToken(config.content.req.headers.cookie) : getToken() || '';
+    // const cookie = config.content ? cookies(config.content) : ''
+    const content = config.content || (config.params && config.params.content) || ''
+    const token = content ? SSRGetToken(content) : getToken() || '';
+    // const token = '';
     const now = new Date().getTime() - diffTime;
-    // const content = {
-    //     writeHead: config.content?.res?.writeHead,
-    //     end: config.content?.res?.end
-    // }
-    // config?.headers?.content?.req?.headers?.cookie
-    if (config.content) {
-        headers.content = config.content.res;
-        headers.referer = config.content.req.headers.referer;
+    if (content) {
+        headers.content = content.res;
+        headers.referer = content?.req?.headers?.referer || config?.content?.req?.headers?.referer || '';
     }
-    // config?.headers.req.req.writeHead(301, { location: "https://www.baidu.com/" } );
-    // config?.headers.req.req.end();
-    // console.log('config1', token, md5(now + 'bdc739ff2dcf').toString().toLocaleUpperCase())
     config.headers = {
         ...headers,
         token,
@@ -100,12 +90,13 @@ fetcher.interceptors.request.use((config) => {
         _,
         ...params,
     }
-    delete config.content
+    delete config.content || (config.params && config.params.content);
     // console.log('是否服务端渲染', config)
     // 在发送请求之前做某事，比如说 设置loading动画显示
     return config
 }, error => {
     // 请求错误时做些事
+    console.log('请求失败', error)
     return Promise.reject(error);
 })
 

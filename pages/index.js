@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { getCookies, removeCookies } from 'cookies-next';
 import api  from '../utils/api';
+import cookies from 'next-cookies';
 import styles from '../styles/Home.module.css'
 import { getCookie, removeCookie } from '@ewt/eutils';
 // "dev": "next dev",
@@ -14,7 +14,7 @@ export default function Home(data) {
   const { data: name } = data;
   const test = async () => {
     console.log(123);
-    const data1 = await api.ajaxgetuser({type: 1});
+    const data1 = await api.pageClassWarning({});
     console.log(data1);
   }
   return (
@@ -93,14 +93,27 @@ export default function Home(data) {
 }
 export async function getServerSideProps (content) {
   let data = 'abc123'
+  const name = cookies(content)
   // 规则
   // 1：服务端渲染 请求接口 第一个入参必须是content  第二个入参是需要的对象入参 就算不需要入参 也要传一个空对象 以保证是服务端渲染接口
   // 2: 客户端渲染 入参是一个对象  是否需要入参都可
   // const { res } =  content;
   // removeCookies(content, 'token', { 'Domain': '.mistong.com' })
   // console.log('content', content.req.cookies, typeof window !== 'undefined', getCookies(content,'token'))
-  // const data1 = await api.getUserTimeRanking(content, {test: 1});
-  // console.log('content', data1)
+  try {
+    const data1 = await api.UserInfo(content, {});
+    // const data1 = await api.pageClassWarning(content, { classId: "1000198",
+    //   evaluationTaskId: "1364450829645512705",
+    //   gradeId: "2023",
+    //   pageIndex: 1,
+    //   pageSize: 10,
+    //   sort: 1,
+    //   type: 1,
+    //   userName: ""});
+    // console.log('data11', data1)
+  } catch (e) {
+    console.log(e)
+  }
   return {
     props: {
       data

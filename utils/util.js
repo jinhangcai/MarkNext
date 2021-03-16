@@ -1,5 +1,5 @@
 import { getCookie, removeCookie } from '@ewt/eutils';
-
+import cookies from 'next-cookies';
 // 获取时长为X分X秒
 export function getDurationText(sec) {
     sec = parseInt(sec);
@@ -11,6 +11,7 @@ export function toLogin(url, content) {
     let domain = 'web.ewt360.com';
     const pat = new RegExp('web.ewt360.com')
     if (url) {
+        // ssr
         if (!pat.test(url)) {
             domain = 'web.test.mistong.com';
         }
@@ -39,22 +40,26 @@ export function getToken(tokenKey = 'token') {
     return token;
 }
 
-export function SSRGetToken(token, tokenKey =  'token') {
-    let cookieValue = '';
-    if (token) {
-        let cookies = token.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            // 判断这个cookie的参数名是不是我们想要的
-            if (cookie.substring(0, tokenKey.length + 1) === (tokenKey + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(tokenKey.length + 1));
-                break;
-            }
-        }
-        return cookieValue;
+export function SSRGetToken(content, tokenKey =  'token') {
+    // let cookieValue = '';
+    let tokenname = '';
+    const { token, user, ewt_user } = cookies(content);
+    const dataquery = {
+        token,
+        user,
+        ewt_user
     }
-    return ''
-
+    const query = ['token', 'ewt_user', 'user'];
+    for (const value of query) {
+        if (dataquery[value]) {
+            tokenname = dataquery[value];
+            break;
+        }
+    }
+    if (tokenname.match('tk=')) {
+        tokenname = getUrlParam('tk', tokenname);
+    }
+    return tokenname;
 }
 
 // 根据当前环境获取要跳转的mystudy的herf

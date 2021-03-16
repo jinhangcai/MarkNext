@@ -1,14 +1,28 @@
 const express = require('express')
 const next = require('next')
 const dev = process.env.NODE_ENV !== 'production'
+const PROXY_ENV = process.env.PROXY_ENV
 const app = next({ dev })
 const handle = app.getRequestHandler()
-console.log('12231')
+const { createProxyMiddleware  } = require('http-proxy-middleware')
 const {info, error}  = require('./log4js')
-console.log('dfsafsaf')
+const devProxy = {
+    '/api': {
+        target: 'http://gateway.test.mistong.com', // 端口自己配置合适的
+        pathRewrite: {
+            '^/api': ''
+        },
+        changeOrigin: true
+    }
+}
 app.prepare().then(() => {
-    console.log('dfsafsaf')
-    const server = express()
+    const server = express();
+    server.set('port', 3000);
+    if (PROXY_ENV) {
+        Object.keys(devProxy).forEach(function(context) {
+            server.use(createProxyMiddleware(context, devProxy[context]))
+        })
+    }
     console.log('进入express')
     // server.get('/p/:id', (req, res) => {
     //     const actualPage = '/post'
@@ -32,12 +46,12 @@ app.prepare().then(() => {
         return handle(req, res)
     })
 
-    server.listen(3000, (err) => {
+    server.listen(80, (err) => {
         if (err) {
             console.log('出错', err)
             throw err
         }
-        console.log('> Ready on http://localhost:3000')
+        console.log('> Ready on http://local.mistong.com:80')
     })
 }).catch((ex) => {
     console.error(ex.stack)
