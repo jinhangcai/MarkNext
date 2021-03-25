@@ -43,10 +43,10 @@ export default function About(data) {
 export const getStaticProps = async context => {
     // ...
     let data = '456'
-    const data1 = await api.getUserTimeRanking();
+    // const data1 = await api.getUserTimeRanking();
     return {
         props: {
-            data
+            // data
         }
     }
 }

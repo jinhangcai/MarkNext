@@ -91,32 +91,44 @@ export default function Home(data) {
     </div>
   )
 }
-export async function getServerSideProps (content) {
-  let data = 'abc123'
-  const name = cookies(content)
-  // 规则
-  // 1：服务端渲染 请求接口 第一个入参必须是content  第二个入参是需要的对象入参 就算不需要入参 也要传一个空对象 以保证是服务端渲染接口
-  // 2: 客户端渲染 入参是一个对象  是否需要入参都可
-  // const { res } =  content;
-  // removeCookies(content, 'token', { 'Domain': '.mistong.com' })
-  // console.log('content', content.req.cookies, typeof window !== 'undefined', getCookies(content,'token'))
-  try {
-    const data1 = await api.UserInfo(content, {});
-    // const data1 = await api.pageClassWarning(content, { classId: "1000198",
-    //   evaluationTaskId: "1364450829645512705",
-    //   gradeId: "2023",
-    //   pageIndex: 1,
-    //   pageSize: 10,
-    //   sort: 1,
-    //   type: 1,
-    //   userName: ""});
-    // console.log('data11', data1)
-  } catch (e) {
-    console.log(e)
-  }
-  return {
-    props: {
-      data
-    }
-  }
+// 服务端渲染 每次页面加载都会触发 仅在服务器端运行，而从不在浏览器上运行。 结果不能由CDN缓存。
+// export async function getServerSideProps (content) {
+//   let data = 'abc123'
+//   // const name = cookies(content)
+//   console.log('服务端渲染 每次页面加载都会触发')
+//   // 规则
+//   // 1：服务端渲染 请求接口 第一个入参必须是content  第二个入参是需要的对象入参 就算不需要入参 也要传一个空对象 以保证是服务端渲染接口
+//   // 2: 客户端渲染 入参是一个对象  是否需要入参都可
+//   // const { res } =  content;
+//   // removeCookies(content, 'token', { 'Domain': '.mistong.com' })
+//   // console.log('content', content.req.cookies, typeof window !== 'undefined', getCookies(content,'token'))
+//   try {
+//     // const data1 = await api.UserInfo(content, {});
+//     // const data1 = await api.pageClassWarning(content, { classId: "1000198",
+//     //   evaluationTaskId: "1364450829645512705",
+//     //   gradeId: "2023",
+//     //   pageIndex: 1,
+//     //   pageSize: 10,
+//     //   sort: 1,
+//     //   type: 1,
+//     //   userName: ""});
+//     // console.log('data11', data1)
+//   } catch (e) {
+//     console.log(e)
+//   }
+//   return {
+//     props: {
+//       data
+//     }
+//   }
+// }
+// 在构建时调用  在用户请求之前预先渲染此页面   可以cdn缓存
+export async function getStaticProps({ params }) {
+  // params 包含此片博文的 `id` 信息。
+  // 如果路由是 /posts/1，那么 params.id 就是 1
+  // const res = await fetch(`https://.../posts/${params.id}`)
+  // const post = await res.json()
+  console.log('在构建时也会被调用')
+  // 通过 props 参数向页面传递博文的数据
+  return { props: {  } }
 }

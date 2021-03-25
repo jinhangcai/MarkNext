@@ -1,5 +1,6 @@
 const express = require('express')
 const next = require('next')
+const http = require('http')
 const dev = process.env.NODE_ENV !== 'production'
 const PROXY_ENV = process.env.PROXY_ENV
 const app = next({ dev })
