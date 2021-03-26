@@ -2,7 +2,6 @@ const express = require('express')
 const next = require('next')
 const http = require('http')
 const dev = process.env.NODE_ENV !== 'production'
-const PROXY_ENV = process.env.PROXY_ENV
 const app = next({ dev })
 const handle = app.getRequestHandler()
 const { createProxyMiddleware  } = require('http-proxy-middleware')
@@ -18,8 +17,8 @@ const devProxy = {
 }
 app.prepare().then(() => {
     const server = express();
-    server.set('port', 3000);
-    if (PROXY_ENV) {
+    // server.set('port', 3000);
+    if (dev) {
         Object.keys(devProxy).forEach(function(context) {
             server.use(createProxyMiddleware(context, devProxy[context]))
         })

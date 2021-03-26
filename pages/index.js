@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import api  from '../utils/api';
-import cookies from 'next-cookies';
+import Layout from '../components/common/layout';
 import styles from '../styles/Home.module.css'
 import { getCookie, removeCookie } from '@ewt/eutils';
 // "dev": "next dev",
@@ -10,85 +10,88 @@ import { getCookie, removeCookie } from '@ewt/eutils';
 // 该方法是一个异步函数，需要在组件内部进行导出。
 // 在开发模式下， getStaticProps 改为在每个请求上运行。
 // 在生产模式下， getStaticProps 只会在构建的时候执行，而每次访问 /list 页面时不会再执行 getStaticProps 方法。
+// getServerSideProps:服务端渲染 每次页面加载都会触发 仅在服务器端运行，而从不在浏览器上运行。 结果不能由CDN缓存。
+// ps: getStaticProps与getServerSideProps 不能同时存在
 export default function Home(data) {
-  const { data: name } = data;
+  const { name } = data;
+  console.log('data', name)
   const test = async () => {
-    console.log(123);
     const data1 = await api.pageClassWarning({});
-    console.log(data1);
   }
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App </title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Layout title={ 'Next.js + Express' }>
+        <div className={styles.container}>
+          <Head>
+            <title>Create Next App </title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
 
-      <main className={styles.main}>
-        <Link   href={{
-          pathname: '/About/About',
-          query: { name: 'test' },
-        }} >
-          <a>About Page</a>
-        </Link>
-        <Link   href={{
-          pathname: '/List/List',
-          query: { name: 'test' },
-        }} >
-          <a>About List</a>
-        </Link>
-        <h1 className={styles.title} onClick={ () => { test(); }}>
-          Welcome to Next.js! {name}
-        </h1>
+          <main className={styles.main}>
+            <Link   href={{
+              pathname: '/About/About',
+              query: { name: 'test' },
+            }} >
+              <a>About Page {name} </a>
+            </Link>
+            <Link   href={{
+              pathname: '/List/List',
+              query: { name: 'test' },
+            }} >
+              <a>About List</a>
+            </Link>
+            <h1 className={styles.title} onClick={ () => { test(); }}>
+              Welcome to Next.js! {name}
+            </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
+            <p className={styles.description}>
+              Get started by editing{' '}
+              <code className={styles.code}>pages/index.js</code>
             </p>
-          </a>
-        </div>
-      </main>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+            <div className={styles.grid}>
+              <a href="https://nextjs.org/docs" className={styles.card}>
+                <h3>Documentation &rarr;</h3>
+                <p>Find in-depth information about Next.js features and API.</p>
+              </a>
+
+              <a href="https://nextjs.org/learn" className={styles.card}>
+                <h3>Learn &rarr;</h3>
+                <p>Learn about Next.js in an interactive course with quizzes!</p>
+              </a>
+
+              <a
+                  href="https://github.com/vercel/next.js/tree/master/examples"
+                  className={styles.card}
+              >
+                <h3>Examples &rarr;</h3>
+                <p>Discover and deploy boilerplate example Next.js projects.</p>
+              </a>
+
+              <a
+                  href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+                  className={styles.card}
+              >
+                <h3>Deploy &rarr;</h3>
+                <p>
+                  Instantly deploy your Next.js site to a public URL with Vercel.
+                </p>
+              </a>
+            </div>
+          </main>
+
+          <footer className={styles.footer}>
+            <a
+                href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+              Powered by{' '}
+              <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
+            </a>
+          </footer>
+        </div>
+      </Layout>
   )
 }
 // 服务端渲染 每次页面加载都会触发 仅在服务器端运行，而从不在浏览器上运行。 结果不能由CDN缓存。
@@ -128,7 +131,16 @@ export async function getStaticProps({ params }) {
   // 如果路由是 /posts/1，那么 params.id 就是 1
   // const res = await fetch(`https://.../posts/${params.id}`)
   // const post = await res.json()
-  console.log('在构建时也会被调用')
+  console.log('在构建时也会被调用', process.env.PROXY_ENV)
   // 通过 props 参数向页面传递博文的数据
-  return { props: {  } }
+  return { props: { name:'abc'  } }
+}
+export async function getStaticPaths({ params }) {
+  console.log('params', params)
+  return {
+    paths: [
+      { params: {  } } // See the "paths" section below
+    ],
+    fallback: true // See the "fallback" section below
+  };
 }

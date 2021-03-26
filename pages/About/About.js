@@ -2,7 +2,9 @@ import Head from 'next/head'
 import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next'
 import api  from '../../utils/api';
 import styles from '../../styles/Home.module.css'
+import style from './index.module.scss'
 import Link from "next/link";
+// import Router,{ withRouter } from 'next/router'
 // 静态生成 getStaticProps =》
 // getStaticProps 方法的作用是获取组件静态生成需要的数据。并通过 props 的方式将数据传递给组件。
 // 该方法是一个异步函数，需要在组件内部进行导出。
@@ -21,7 +23,7 @@ import Link from "next/link";
 export default function About(data) {
     const { data: name } = data;
     return (
-        <div className={styles.container}>
+        <div className={style.content}>
             {name}
             <Link href="/">
                 <a>Index Page</a>
@@ -43,6 +45,7 @@ export default function About(data) {
 export const getStaticProps = async context => {
     // ...
     let data = '456'
+    console.log('about在构建时也会被调用')
     // const data1 = await api.getUserTimeRanking();
     return {
         props: {
