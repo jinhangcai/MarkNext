@@ -16,6 +16,7 @@ $ npm run dev
 ``` bash
 server.js 手动修改匹配  mock  或者 dev
 ```
+### 注意事项
 ``` bash
 pages: 默认的路由文件地址 
 public 默认的静态文件入口
