@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Image  from 'next/image'
 import api  from '../utils/api';
 import Layout from '../components/common/layout';
 import styles from '../styles/Home.module.css'
@@ -28,6 +29,10 @@ export default function Home(data) {
           </Head>
 
           <main className={styles.main}>
+            <Image src='/bg.png'
+                   width={104}
+                   height={104}
+            />
             <Link   href={{
               pathname: '/About/About',
               query: { name: 'test' },
@@ -135,12 +140,12 @@ export async function getStaticProps({ params }) {
   // 通过 props 参数向页面传递博文的数据
   return { props: { name:'abc'  } }
 }
-export async function getStaticPaths({ params }) {
-  console.log('params', params)
-  return {
-    paths: [
-      { params: {  } } // See the "paths" section below
-    ],
-    fallback: true // See the "fallback" section below
-  };
-}
+// export async function getStaticPaths({ params }) {
+//   console.log('params', params)
+//   return {
+//     paths: [
+//       { params: {  } } // See the "paths" section below
+//     ],
+//     fallback: true // See the "fallback" section below
+//   };
+// }

@@ -24,13 +24,32 @@ module.exports = (phase, { defaultConfig }) => {
             PROXY_ENV: phase === PHASE_DEVELOPMENT_SERVER ?'dev' : '',
         },
         withSass: withSass(withCSS({})),
-        // webpack: (config, options) => {
+        // webpack(config, options) {
+        //     // const {isServer} = options
+        //     config.module.rules.push({
+        //         test: /\.(jpe?g|png|svg|gif|ico|webp|jp2)$/,
+        //         // exclude: '',
+        //         use: [
+        //             {
+        //                 loader: require.resolve('url-loader'),
+        //                 options: {
+        //                     limit: 50000,
+        //                     fallback: require.resolve('file-loader'),
+        //                     // publicPath: `${nextConfig.assetPrefix}/_next/static/assets/`,
+        //                     // outputPath: `static/assets/`,
+        //                     name: '[name]-abc[hash:base64:5].[ext]',
+        //                     esModule: false,
+        //                 },
+        //             },
+        //         ],
+        //     })
         //
+        //     return config
         // },
         devIndicators: {
-            autoPrerender: false
+            autoPrerender: false // 静态优化指标
         },
-        generateEtags: false,
+        generateEtags: false,  // 禁止etag生成
         distDir: 'build',  // 自定义打包输出文件
         compress: true, // Next.js提供gzip压缩来压缩渲染的内容和静态文件  一般通过nginx来做gzip压缩
         generateBuildId: async () => {
