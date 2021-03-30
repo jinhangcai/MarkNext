@@ -11,6 +11,10 @@ export default ({ children, title = 'Next.js / Express App' }) => (
             <meta name="description" content="你的页面描述内容" />
             <meta name='defaultLanguage' content='fr' />
             <meta name='availableLanguages' content='fr, en' />
+            <link rel="stylesheet" href="//web.ewt360.com/common/antd/prod/3.26.18/antd.min.css" />
+            <script src="//web.ewt360.com/common/classnames.min.js"></script>
+            <script src="//web.ewt360.com/common/moment/prod/2.27.0/moment.min.js"></script>
+            <script src="//web.ewt360.com/common/antd/prod/3.26.18/antd.min.js"></script>
         </Head>
 
         { children }
