@@ -31,9 +31,7 @@ const codeMessage = {
 }
 
 function checkStatus(response) {
-    console.log('config-response', response)
-    return;
-    const { status, data, data: { data: businessData, msg }, config, config: { headers: { referer, content } }, config: { url }, headers } = response;
+    const { status, data, data: { data: businessData, msg }, config, config: { url, headers: { referer, content } }, headers } = response;
     if (status >= 200 && status < 300) {
         const { code } = data;
         const numCode = Number(code);
@@ -52,6 +50,7 @@ function checkStatus(response) {
                 return fetcher(url, config);
             } else if (numCode === 117001 || numCode === 2001106) {
                 // toLogin(response?.config?.headers?.referer, response.config.headers.content); // 登录失效跳转登录
+                console.log('准备跳转登录', referer)
                 toLogin(referer, content); // 登录失效跳转登录
             } else {
                 message.error(msg);

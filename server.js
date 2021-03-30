@@ -18,11 +18,14 @@ const devProxy = {
 app.prepare().then(() => {
     const server = express();
     // server.set('port', 3000);
-    if (dev) {
-        Object.keys(devProxy).forEach(function(context) {
-            server.use(createProxyMiddleware(context, devProxy[context]))
-        })
-    }
+    Object.keys(devProxy).forEach(function(context) {
+        server.use(createProxyMiddleware(context, devProxy[context]))
+    })
+    // if (dev) {
+    //     Object.keys(devProxy).forEach(function(context) {
+    //         server.use(createProxyMiddleware(context, devProxy[context]))
+    //     })
+    // }
     console.log('进入express')
     // server.get('/p/:id', (req, res) => {
     //     const actualPage = '/post'

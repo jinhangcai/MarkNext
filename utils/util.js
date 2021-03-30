@@ -1,4 +1,4 @@
-import { getCookie, removeCookie } from '@ewt/eutils';
+import { getCookie, removeCookie, getUrlParam } from '@ewt/eutils';
 import cookies from 'next-cookies';
 // 获取时长为X分X秒
 export function getDurationText(sec) {
@@ -9,13 +9,17 @@ export function getDurationText(sec) {
 // 跳转登录
 export function toLogin(url, content) {
     let domain = 'web.ewt360.com';
-    const pat = new RegExp('web.ewt360.com')
+    // const pat = new RegExp('web.ewt360.com')
+    console.log('进入login', url)
     if (url) {
         // ssr
-        if (!pat.test(url)) {
+        // if (!pat.test(url)) {
+        //     domain = 'web.test.mistong.com';
+        // }
+        if (url.indexOf('ewt360') <= -1) {
             domain = 'web.test.mistong.com';
         }
-    } else if (window.location.host !== 'web.ewt360.com'){
+    } else if (url.indexOf('ewt360') <= -1){
         domain = 'web.test.mistong.com';
         removeCookie('token'); // 清除token
     }
