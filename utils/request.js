@@ -77,7 +77,7 @@ fetcher.interceptors.request.use((config) => {
     const now = new Date().getTime() - diffTime;
     if (content) {
         headers.content = content.res;
-        headers.referer = content?.req?.headers?.referer || config?.content?.req?.headers?.referer || '';
+        headers.referer = content.req.headers?.referer || config.content?.req?.headers?.referer || '';
     }
     config.headers = {
         ...headers,

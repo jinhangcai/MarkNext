@@ -23,7 +23,10 @@ module.exports = (phase, { defaultConfig }) => {
         env: {
             PROXY_ENV: phase === PHASE_DEVELOPMENT_SERVER ?'dev' : '',
         },
-        withSass: withSass(withCSS({})),
+        // withSass:withSass(),
+        // sassOptions: {
+        //     includePaths: [path.join(__dirname, 'index')],
+        // },
         // webpack(config, options) {
         //     // const {isServer} = options
         //     config.module.rules.push({
