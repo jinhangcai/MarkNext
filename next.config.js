@@ -1,7 +1,9 @@
-const isProd = process.env.NODE_ENV === 'production'
+// const isProd = process.env.NODE_ENV === 'production'
+const path = require('path');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants')
-const withSass = require('@zeit/next-sass')
-const withCSS = require('@zeit/next-css')
+console.log('path', path.resolve(__dirname, "./components"))
+// const withSass = require('@zeit/next-sass')
+// const withCSS = require('@zeit/next-css')
 // module.exports = {
 //     // Use the CDN in production and localhost for development.
 //     assetPrefix: isProd ? 'https://cdn.mydomain.com' : '',
@@ -27,6 +29,17 @@ module.exports = (phase, { defaultConfig }) => {
         // sassOptions: {
         //     includePaths: [path.join(__dirname, 'index')],
         // },
+        webpack: (config) => {
+            config.node = {
+                fs: "empty",
+            }
+            config.resolve.alias = {
+                ...config.resolve.alias,
+                "@components": path.resolve(__dirname, "./components"),
+            }
+
+            return config
+        },
         // webpack(config, options) {
         //     // const {isServer} = options
         //     config.module.rules.push({

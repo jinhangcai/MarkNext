@@ -8,40 +8,26 @@ import { generator } from './apiGenerator'
 //     print = 'pst.ewt360.com'
 // }
 const URLS = {
-    getUserTimeRanking: { // 看课统计
-        method: 'post',
-        // url: '/api/studyprod/lessonCenter/getUserTimeRanking',
-        url:'/api/HomeNew/GetTopFansArticle',
-        mockMethod: 'get',
-        mockUrl: 'http://yapi.235.mistong.com/mock/1181/api/studyprod/lessonCenter/getUserTimeRanking',
-    },
-    ajaxgetuser: { // 看课统计
+    getHomeLiveBanner: {
         method: 'get',
-        // url: '/api/studyprod/lessonCenter/getUserTimeRanking',
-        url:'/api/usercenter/account/password/rule',
+        url: '/api/studyprod/home/hotLive',
+        // url: 'http://yapi.235.mistong.com/mock/1181/api/studyprod/home/hotLive',
         mockMethod: 'get',
-        mockUrl: 'http://yapi.235.mistong.com/mock/1181/api/studyprod/lessonCenter/getUserTimeRanking',
+        mockUrl: '/1181/api/studyprod/home/hotLive',
     },
-    pageClassWarning: { // 查询班级测评报告
-        method: 'post',
-        // url: 'api/studyprod/lessonCenter/getYesterdayWatchData',
-        url: '/api/psychology/mentalHealthReport/pageClassWarning',
-        mockMethod: 'post',
-        mockUrl: 'http://yapi.235.mistong.com/mock/1199/mentalHealthReport/pageClassWarning',
-    },
-    getEvaluationQuestion: { // 获取测评题目
+    getHomeBannerModuleList: {
         method: 'get',
-        // url: 'api/studyprod/lessonCenter/getYesterdayWatchData',
-        url:'/api/psychology/evaluationAnswer/getEvaluationQuestion',
+        url: '/api/studyprod/home/weekAndLiteracy',
+        // url: 'http://yapi.235.mistong.com/mock/1181/api/studyprod/home/weekAndLiteracy',
         mockMethod: 'get',
-        mockUrl: 'http://yapi.235.mistong.com/mock/1199/evaluationAnswer/getEvaluationQuestion',
+        mockUrl: '/1181/api/studyprod/home/weekAndLiteracy',
     },
-    UserInfo: { // 获取测评题目
+    getHomeTeacherBanner: {
         method: 'get',
-        // url: 'api/studyprod/lessonCenter/getYesterdayWatchData',
-        url:'/api/usercenter/user/info',
+        url: '/api/studyprod/home/famousTeacher',
+        // url: 'http://yapi.235.mistong.com/mock/1181/api/studyprod/home/famousTeacher',
         mockMethod: 'get',
-        mockUrl: 'http://yapi.235.mistong.com/mock/1199/evaluationAnswer/getEvaluationQuestion',
+        mockUrl: '/1181/api/studyprod/home/famousTeacher',
     },
 };
 export default generator(URLS);

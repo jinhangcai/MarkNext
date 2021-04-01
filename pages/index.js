@@ -3,7 +3,12 @@ import Link from 'next/link'
 import Image  from 'next/image'
 import api  from '../utils/api';
 import Layout from '../components/common/layout';
-import styles from '../styles/Home.module.css'
+import React, { Component, useState, useEffect, createContext, useContext, useReducer } from 'react';
+import ModuleHeader from '../components/EwtSite/ModuleHeader'
+import BannerModule from '../components/EwtSite/BannerModule'
+import LiveItem from '../components/EwtSite/LiveItem'
+import TeacherBanner from '../components/EwtSite/TeacherBanner'
+import styles from './index.module.scss'
 import { getCookie, removeCookie } from '@ewt/eutils';
 // "dev": "next dev",
 // 静态生成 getStaticProps =》
@@ -13,133 +18,114 @@ import { getCookie, removeCookie } from '@ewt/eutils';
 // 在生产模式下， getStaticProps 只会在构建的时候执行，而每次访问 /list 页面时不会再执行 getStaticProps 方法。
 // getServerSideProps:服务端渲染 每次页面加载都会触发 仅在服务器端运行，而从不在浏览器上运行。 结果不能由CDN缓存。
 // ps: getStaticProps与getServerSideProps 不能同时存在
-export default function Home(data) {
-  const { name } = data;
-  console.log('data', name)
-  const test = async () => {
-    const data1 = await api.pageClassWarning({});
-  }
-  return (
-      <Layout title={ 'Next.js + Express' }>
-        <div className={styles.container}>
-          <Head>
-            <title>Create Next App </title>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
+const DataList1 = () => {
+    console.log(1)
+}
+const Home = (data) => {
+    // const [liveBanner, setliveBanner] = useState({});
+    // setliveBanner(data)
+    // const { liveBanner } = this.state;
+    const { liveList = [], title: liveTitle, icon: liveIcon, titleJumpUrl: liveUrl } = data.data;
+    const bannerModuleList = data.ModuleList;
+    const { teacherList = [], title: teacherTitle, icon: teacherIcon, titleJumpUrl: teacherUrl } = data.TeacherBanner;
+    const DataList = async () => {
+        data = await api.getHomeLiveBanner({});
+        console.log('data', data)
+    }
 
-          <main className={styles.main}>
-            <Image src='/bg.png'
-                   width={104}
-                   height={104}
-            />
-            <Link   href={{
-              pathname: '/About/About',
-              query: { name: 'test' },
-            }} >
-              <a>About Page {name} </a>
-            </Link>
-            <Link   href={{
-              pathname: '/List/List',
-              query: { name: 'test' },
-            }} >
-              <a>About List</a>
-            </Link>
-            <h1 className={styles.title} onClick={ () => { test(); }}>
-              Welcome to Next.js! {name}
-            </h1>
-
-            <p className={styles.description}>
-              Get started by editing{' '}
-              <code className={styles.code}>pages/index.js</code>
-            </p>
-
-            <div className={styles.grid}>
-              <a href="https://nextjs.org/docs" className={styles.card}>
-                <h3>Documentation &rarr;</h3>
-                <p>Find in-depth information about Next.js features and API.</p>
-              </a>
-
-              <a href="https://nextjs.org/learn" className={styles.card}>
-                <h3>Learn &rarr;</h3>
-                <p>Learn about Next.js in an interactive course with quizzes!</p>
-              </a>
-
-              <a
-                  href="https://github.com/vercel/next.js/tree/master/examples"
-                  className={styles.card}
-              >
-                <h3>Examples &rarr;</h3>
-                <p>Discover and deploy boilerplate example Next.js projects.</p>
-              </a>
-
-              <a
-                  href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                  className={styles.card}
-              >
-                <h3>Deploy &rarr;</h3>
-                <p>
-                  Instantly deploy your Next.js site to a public URL with Vercel.
-                </p>
-              </a>
+    return (
+        <Layout title={ 'Next.js + Express' }>
+            <div className={styles.home_page}>
+                <div className={styles.W1200}>
+                    <a onClick={() => { DataList() }}>123</a>
+                    <div>
+                        <ModuleHeader icon={liveIcon}
+                                      hasMore={!!liveUrl}
+                                      hasMoreUrl={liveUrl}>
+                            {liveTitle}
+                        </ModuleHeader>
+                        <div className={styles.live_list}>
+                            {liveList && liveList.length > 0 && liveList.map(liveItem => {
+                                const { liveId, bgImg, presentPrice, originalPrice, entries, startTime, signUp: isSignUp, liveStatus, url } = liveItem;
+                                return <LiveItem key={liveId}
+                                                 cover={bgImg}
+                                                 price={presentPrice}
+                                                 originalPrice={originalPrice}
+                                                 signUpCount={entries}
+                                                 startTime={startTime}
+                                                 url={url}
+                                                 isSignUp={isSignUp}
+                                                 liveStatus={liveStatus}
+                                                 className={styles.home_page_live_item}
+                                />
+                            })}
+                        </div>
+                    </div>
+                    {bannerModuleList && bannerModuleList.length > 0 && bannerModuleList.map((moduleData, moduleIndex) => (
+                        <BannerModule data={moduleData} key={moduleIndex}/>
+                    ))}
+                    <div>
+                        <ModuleHeader icon={teacherIcon}
+                                      hasMore={!!teacherUrl}
+                                      hasMoreUrl={teacherUrl}>
+                            {teacherTitle}
+                        </ModuleHeader>
+                        <TeacherBanner teacherList={teacherList || []}/>
+                    </div>
+                </div>
             </div>
-          </main>
-
-          <footer className={styles.footer}>
-            <a
-                href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              Powered by{' '}
-              <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-            </a>
-          </footer>
-        </div>
-      </Layout>
-  )
+        </Layout>
+        )
 }
 // 服务端渲染 每次页面加载都会触发 仅在服务器端运行，而从不在浏览器上运行。 结果不能由CDN缓存。
-// export async function getServerSideProps (content) {
-//   let data = 'abc123'
-//   // const name = cookies(content)
-//   console.log('服务端渲染 每次页面加载都会触发')
-//   // 规则
-//   // 1：服务端渲染 请求接口 第一个入参必须是content  第二个入参是需要的对象入参 就算不需要入参 也要传一个空对象 以保证是服务端渲染接口
-//   // 2: 客户端渲染 入参是一个对象  是否需要入参都可
-//   // const { res } =  content;
-//   // removeCookies(content, 'token', { 'Domain': '.mistong.com' })
-//   // console.log('content', content.req.cookies, typeof window !== 'undefined', getCookies(content,'token'))
-//   try {
-//     // const data1 = await api.UserInfo(content, {});
-//     // const data1 = await api.pageClassWarning(content, { classId: "1000198",
-//     //   evaluationTaskId: "1364450829645512705",
-//     //   gradeId: "2023",
-//     //   pageIndex: 1,
-//     //   pageSize: 10,
-//     //   sort: 1,
-//     //   type: 1,
-//     //   userName: ""});
-//     // console.log('data11', data1)
-//   } catch (e) {
-//     console.log(e)
-//   }
-//   return {
-//     props: {
-//       data
-//     }
-//   }
-// }
-// 在构建时调用  在用户请求之前预先渲染此页面   可以cdn缓存
-export async function getStaticProps({ params }) {
-  // params 包含此片博文的 `id` 信息。
-  // 如果路由是 /posts/1，那么 params.id 就是 1
-  // const res = await fetch(`https://.../posts/${params.id}`)
-  // const post = await res.json()
-  console.log('在构建时也会被调用', process.env.PROXY_ENV)
-  // 通过 props 参数向页面传递博文的数据
-  return { props: { name:'abc'  } }
+export async function getServerSideProps (content) {
+  let data = '';
+  let ModuleList = '';
+  let TeacherBanner = '';
+  // console.log('context.query', content)
+  // const name = cookies(content)
+  // 规则
+  // 1：服务端渲染 请求接口 第一个入参必须是content  第二个入参是需要的对象入参 就算不需要入参 也要传一个空对象 以保证是服务端渲染接口
+  // 2: 客户端渲染 入参是一个对象  是否需要入参都可
+  // const { res } =  content;
+  // removeCookies(content, 'token', { 'Domain': '.mistong.com' })
+  // console.log('content', content.req.cookies, typeof window !== 'undefined', getCookies(content,'token'))
+  try {
+      data = await api.getHomeLiveBanner(content, {});
+      ModuleList = await api.getHomeBannerModuleList(content, {});
+      TeacherBanner = await api.getHomeTeacherBanner(content, {});
+      console.log('this', DataList1())
+    // const data1 = await api.UserInfo(content, {});
+    // const data1 = await api.pageClassWarning(content, { classId: "1000198",
+    //   evaluationTaskId: "1364450829645512705",
+    //   gradeId: "2023",
+    //   pageIndex: 1,
+    //   pageSize: 10,
+    //   sort: 1,
+    //   type: 1,
+    //   userName: ""});
+    // console.log('data11', data1)
+  } catch (e) {
+    console.log(e)
+  }
+    return {
+        props: {
+            data,
+            ModuleList,
+            TeacherBanner
+        }
+    }
 }
+// 在构建时调用  在用户请求之前预先渲染此页面   可以cdn缓存
+// export async function getStaticProps({ params }) {
+//   // params 包含此片博文的 `id` 信息。
+//   // 如果路由是 /posts/1，那么 params.id 就是 1
+//   // const res = await fetch(`https://.../posts/${params.id}`)
+//   // const post = await res.json()
+//   console.log('在构建时也会被调用', process.env.PROXY_ENV)
+//   // 通过 props 参数向页面传递博文的数据
+//   return { props: { name:'abc'  } }
+// }
 // export async function getStaticPaths({ params }) {
 //   console.log('params', params)
 //   return {
@@ -149,3 +135,4 @@ export async function getStaticProps({ params }) {
 //     fallback: true // See the "fallback" section below
 //   };
 // }
+export default Home;

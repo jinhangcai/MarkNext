@@ -2,6 +2,7 @@ import axios from 'axios';
 import md5 from 'md5';
 import { message } from 'antd';
 import { getToken, toLogin, SSRGetToken } from "./util";
+import { getBaseURL } from '@mcansh/next-now-base-url';
 let diffTime = 0;
 
 let fetcher = axios.create({
@@ -76,8 +77,9 @@ fetcher.interceptors.request.use((config) => {
     // const token = '';
     const now = new Date().getTime() - diffTime;
     if (content) {
+        const base = getBaseURL(content.req);
         headers.content = content.res;
-        headers.referer = content.req.headers?.referer || config.content?.req?.headers?.referer || '';
+        headers.referer = `${base}${content.resolvedUrl}`;
     }
     config.headers = {
         ...headers,

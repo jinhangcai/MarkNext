@@ -10,7 +10,6 @@ export function getDurationText(sec) {
 export function toLogin(url, content) {
     let domain = 'web.ewt360.com';
     // const pat = new RegExp('web.ewt360.com')
-    console.log('进入login', url)
     if (url) {
         // ssr
         // if (!pat.test(url)) {

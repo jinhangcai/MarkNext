@@ -6,6 +6,7 @@ git rm -r --cached .idea
 ``` bash
 #Bind domain name to local
 127.0.0.1  local.mistong.com
+127.0.0.1  me.ewt360.com
 # Dependencies
 $ npm install
 # Serve at at localhost:80

@@ -4,6 +4,7 @@ import api  from '../../utils/api';
 import styles from '../../styles/Home.module.css'
 import style from './index.module.scss'
 import Link from "next/link";
+import { getBaseURL } from '@mcansh/next-now-base-url';
 // import Router,{ withRouter } from 'next/router'
 // 静态生成 getStaticProps =》
 // getStaticProps 方法的作用是获取组件静态生成需要的数据。并通过 props 的方式将数据传递给组件。
@@ -32,27 +33,36 @@ export default function About(data) {
     )
 }
 
-// export const getServerSideProps: GetServerSideProps = async context => {
-//     // ...
-//     let data = '123'
-//     console.log('getServerSideProps',data)
-//     return {
-//         props: {
-//             data
-//         }
-//     }
-// }
-export const getStaticProps = async context => {
+export const getServerSideProps = async content => {
     // ...
-    let data = '456'
-    console.log('about在构建时也会被调用')
-    // const data1 = await api.getUserTimeRanking();
+    let data = '123'
+    var data1 = await api.getHomeLiveBanner(content, {});
+    const base = getBaseURL(content.req);
+    console.log('base', base)
+    console.log('跳转')
+    // const useRouter1 = useRouter();
     return {
         props: {
-            // data
+            data
         }
     }
 }
+// export const getStaticProps = async content => {
+//     // ...
+//     let data = '456'
+//     console.log('about在构建时也会被调用')
+//
+//     // const { origin, protocol, host, search } = absoluteUrl(content.req, 'localhost:8004')
+//     const base = getBaseURL(content.req);
+//     console.log('origin1', origin, protocol, host, search, process.env.PROXY_ENV, base)
+//     console.log('content.res',content.req.headers.host ,  content.query)
+//     // const data1 = await api.getUserTimeRanking();
+//     return {
+//         props: {
+//             // data
+//         }
+//     }
+// }
 // export const getStaticPaths: () => Promise<{ fallback: boolean }> = async () => {
 //
 //     // 调用外部 API 获取博文列表

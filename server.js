@@ -5,12 +5,14 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 const { createProxyMiddleware  } = require('http-proxy-middleware')
+// ng=>node=>axios请求=>node代理=>出数据
+// ng=>node=>axios=>出数据
 const {info, error}  = require('./log4js')
 const devProxy = {
-    '/api': {
-        target: 'http://gateway.test.mistong.com', // 端口自己配置合适的
+    '/customerApi': {
+        target: 'http://gateway.ewt360.com/', // 端口自己配置合适的
         pathRewrite: {
-            '^/api': ''
+            '^/customerApi': ''
         },
         changeOrigin: true
     }
@@ -18,9 +20,9 @@ const devProxy = {
 app.prepare().then(() => {
     const server = express();
     // server.set('port', 3000);
-    Object.keys(devProxy).forEach(function(context) {
-        server.use(createProxyMiddleware(context, devProxy[context]))
-    })
+    // Object.keys(devProxy).forEach(function(context) {
+    //     server.use(createProxyMiddleware(context, devProxy[context]))
+    // })
     // if (dev) {
     //     Object.keys(devProxy).forEach(function(context) {
     //         server.use(createProxyMiddleware(context, devProxy[context]))

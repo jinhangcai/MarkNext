@@ -1,13 +1,12 @@
 import request from './request'
+import ApiUrl from './baseUrl';
 const api= {};
-
 export const generator = (URLS) => {
     const generalUrl = (key) => {
         const { method, url, mockUrl, mockMethod } = URLS[key];
-        console.log('mock', process.env.PROXY_ENV)
         return {
             method: process.env.PROXY_ENV === 'mock' ? mockMethod || 'get' : method,
-            url: process.env.PROXY_ENV === 'mock' ? mockUrl : url,
+            url: `${ApiUrl}${process.env.PROXY_ENV === 'mock' ? mockUrl : url}`,
         };
     };
     const ApiFilter = (args, URLSItem, item) => {
