@@ -1,4 +1,4 @@
-import { getCookie, removeCookie, getUrlParam } from '@ewt/eutils';
+import { getCookie, setCookie, removeCookie, getUrlParam } from '@ewt/eutils';
 import cookies from 'next-cookies';
 // 获取时长为X分X秒
 export function getDurationText(sec) {
@@ -18,7 +18,7 @@ export function toLogin(url, content) {
         if (url.indexOf('ewt360') <= -1) {
             domain = 'web.test.mistong.com';
         }
-    } else if (url.indexOf('ewt360') <= -1){
+    } else if (window && window.location.href.indexOf('ewt360') <= -1){
         domain = 'web.test.mistong.com';
         removeCookie('token'); // 清除token
     }
@@ -45,6 +45,10 @@ export function getToken(tokenKey = 'token') {
 
 export function SSRGetToken(content, tokenKey =  'token') {
     // let cookieValue = '';
+    if (tokenKey  === 'UserID') {
+        const { UserID } = cookies(content);
+        return UserID
+    }
     let tokenname = '';
     const { token, user, ewt_user } = cookies(content);
     const dataquery = {
@@ -101,6 +105,13 @@ export function getCookieUser() {
     };
 }
 
+export function UrlParam(url, key) {
+    return getUrlParam(key, url);
+}
+
+export function setCookieName() {
+    return setCookie
+}
 
 export const loadjs = (src, attr) => {
     if (!window.__loaded) {

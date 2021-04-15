@@ -1,15 +1,23 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Image  from 'next/image'
-import api  from '../utils/api';
-import Layout from '../components/common/layout';
+import api  from '@utils/api';
+import Layout from '@components/common/layout';
 import React, { Component, useState, useEffect, createContext, useContext, useReducer } from 'react';
-import ModuleHeader from '../components/EwtSite/ModuleHeader'
-import BannerModule from '../components/EwtSite/BannerModule'
-import LiveItem from '../components/EwtSite/LiveItem'
-import TeacherBanner from '../components/EwtSite/TeacherBanner'
+import ModuleHeader from '@components/EwtSite/ModuleHeader'
+import BannerModule from '@components/EwtSite/BannerModule'
+import LiveItem from '@components/EwtSite/LiveItem'
+import TeacherBanner from '@components/EwtSite/TeacherBanner'
+import TopBanner from '@components/EwtSite/TopBanner'
+import TopRankTab from '@components/EwtSite/TopRankTab';
+import PageHeader from '@components/EwtSite/PageHeader';
 import styles from './index.module.scss'
-import { getCookie, removeCookie } from '@ewt/eutils';
+import classnames from 'classnames';
+import { SSRGetToken } from '@utils/util'
+
+// console.log('我执行了几次')
+// import log4js from 'log4js'
+// import { getCookie, removeCookie } from '@ewt/eutils';
 // "dev": "next dev",
 // 静态生成 getStaticProps =》
 // getStaticProps 方法的作用是获取组件静态生成需要的数据。并通过 props 的方式将数据传递给组件。
@@ -18,26 +26,24 @@ import { getCookie, removeCookie } from '@ewt/eutils';
 // 在生产模式下， getStaticProps 只会在构建的时候执行，而每次访问 /list 页面时不会再执行 getStaticProps 方法。
 // getServerSideProps:服务端渲染 每次页面加载都会触发 仅在服务器端运行，而从不在浏览器上运行。 结果不能由CDN缓存。
 // ps: getStaticProps与getServerSideProps 不能同时存在
-const DataList1 = () => {
-    console.log(1)
-}
 const Home = (data) => {
     // const [liveBanner, setliveBanner] = useState({});
     // setliveBanner(data)
     // const { liveBanner } = this.state;
-    const { liveList = [], title: liveTitle, icon: liveIcon, titleJumpUrl: liveUrl } = data.data;
+    const { liveList = [], title: liveTitle, icon: liveIcon, titleJumpUrl: liveUrl } = data && data.data || {};
     const bannerModuleList = data.ModuleList;
     const { teacherList = [], title: teacherTitle, icon: teacherIcon, titleJumpUrl: teacherUrl } = data.TeacherBanner;
-    const DataList = async () => {
-        data = await api.getHomeLiveBanner({});
-        console.log('data', data)
-    }
-
     return (
         <Layout title={ 'Next.js + Express' }>
             <div className={styles.home_page}>
+                <PageHeader subjectMenuAlwaysVisible={true} getHotKeywordList={data.getHotKeywordList} activeMenuList={['home']} />
+                <div className={classnames(styles.W1200, styles.top_wrapper)}>
+                    <div className={styles.top_rank_tab_wrapper}>
+                        <TopRankTab rankList={data.getTopRankList}/>
+                    </div>
+                </div>
+                <TopBanner bannerList={data.topBannerList}/>
                 <div className={styles.W1200}>
-                    <a onClick={() => { DataList() }}>123</a>
                     <div>
                         <ModuleHeader icon={liveIcon}
                                       hasMore={!!liveUrl}
@@ -82,6 +88,10 @@ export async function getServerSideProps (content) {
   let data = '';
   let ModuleList = '';
   let TeacherBanner = '';
+  let topBannerList = '';
+  let getTopRankList = '';
+  let getHotKeywordList = '';
+
   // console.log('context.query', content)
   // const name = cookies(content)
   // 规则
@@ -91,10 +101,24 @@ export async function getServerSideProps (content) {
   // removeCookies(content, 'token', { 'Domain': '.mistong.com' })
   // console.log('content', content.req.cookies, typeof window !== 'undefined', getCookies(content,'token'))
   try {
+      // logger.debug('debug message');
+      // logger.info('info message');
+      // logger.warn('warn message');
+      // logger.error('error message');
       data = await api.getHomeLiveBanner(content, {});
       ModuleList = await api.getHomeBannerModuleList(content, {});
       TeacherBanner = await api.getHomeTeacherBanner(content, {});
-      console.log('this', DataList1())
+      topBannerList = await api.getTopBanner(content, {
+          client: 2,
+          module: 1,
+          positionId: 0,
+          userId: SSRGetToken(content, 'UserID'),
+      })
+      getTopRankList = await api.getTopRankList(content, {});
+      getHotKeywordList = await api.getHotKeywordList(content, {
+          uid: SSRGetToken(content, 'UserID'),
+      });
+      // console.log('this', DataList1())
     // const data1 = await api.UserInfo(content, {});
     // const data1 = await api.pageClassWarning(content, { classId: "1000198",
     //   evaluationTaskId: "1364450829645512705",
@@ -106,13 +130,16 @@ export async function getServerSideProps (content) {
     //   userName: ""});
     // console.log('data11', data1)
   } catch (e) {
-    console.log(e)
+    console.log('出错', e)
   }
     return {
         props: {
             data,
             ModuleList,
-            TeacherBanner
+            TeacherBanner,
+            topBannerList,
+            getTopRankList,
+            getHotKeywordList
         }
     }
 }

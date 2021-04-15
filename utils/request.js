@@ -2,7 +2,11 @@ import axios from 'axios';
 import md5 from 'md5';
 import { message } from 'antd';
 import { getToken, toLogin, SSRGetToken } from "./util";
+// import { info, error} from '../log4js'
+// import log4js from 'log4js'
 import { getBaseURL } from '@mcansh/next-now-base-url';
+import logger from '../log4js'
+let log = '';
 let diffTime = 0;
 
 let fetcher = axios.create({
@@ -43,6 +47,13 @@ function checkStatus(response) {
                 code is ${numCode},
                 msg is ${msg}`
             );
+            if (referer && content) {
+                if (!log) {
+                    log = logger();
+                } else {
+                    log.getServiceLogger('responseError').error(url, numCode, msg);
+                }
+            }
             // 如果超时，则重新请求一次
             if (numCode === 2001109 || numCode === 117006) {
                 const serverTime = headers && headers['server-timestamp'] || 0; // 上一次服务器时间
@@ -57,6 +68,15 @@ function checkStatus(response) {
                 message.error(msg);
             }
             return Promise.reject(data);
+        }
+        // info('请求成功', businessData)
+
+        if (referer && content) {
+            if (!log) {
+                log = logger();
+            } else {
+                log.getDefaultLogger('responseSuccess').info(url, numCode, msg);
+            }
         }
         return businessData;
     }
@@ -77,6 +97,9 @@ fetcher.interceptors.request.use((config) => {
     // const token = '';
     const now = new Date().getTime() - diffTime;
     if (content) {
+        if (!log) {
+            log = logger();
+        }
         const base = getBaseURL(content.req);
         headers.content = content.res;
         headers.referer = `${base}${content.resolvedUrl}`;
@@ -97,6 +120,9 @@ fetcher.interceptors.request.use((config) => {
     return config
 }, error => {
     // 请求错误时做些事
+    if (log) {
+        log.getServiceLogger('requestError').error(error);
+    }
     console.log('请求失败', error)
     return Promise.reject(error);
 })

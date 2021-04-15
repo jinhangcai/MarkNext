@@ -10,7 +10,7 @@ console.log('path', path.resolve(__dirname, "./components"))
 // }
 
 module.exports = (phase, { defaultConfig }) => {
-    console.log('phase', phase)
+    // console.log('phase', phase)
     // if (phase === PHASE_DEVELOPMENT_SERVER) {
     //     return {
     //         env: {
@@ -33,46 +33,31 @@ module.exports = (phase, { defaultConfig }) => {
             config.node = {
                 fs: "empty",
             }
+            //     react: 'React',
+            //     'react-dom': 'ReactDOM',
+            //     moment: 'moment',
+            //     antd: 'antd',
+            //     classnames: 'classNames',
+            // }
             config.resolve.alias = {
                 ...config.resolve.alias,
                 "@components": path.resolve(__dirname, "./components"),
+                "@utils": path.resolve(__dirname, "./utils"),
             }
 
             return config
         },
-        // webpack(config, options) {
-        //     // const {isServer} = options
-        //     config.module.rules.push({
-        //         test: /\.(jpe?g|png|svg|gif|ico|webp|jp2)$/,
-        //         // exclude: '',
-        //         use: [
-        //             {
-        //                 loader: require.resolve('url-loader'),
-        //                 options: {
-        //                     limit: 50000,
-        //                     fallback: require.resolve('file-loader'),
-        //                     // publicPath: `${nextConfig.assetPrefix}/_next/static/assets/`,
-        //                     // outputPath: `static/assets/`,
-        //                     name: '[name]-abc[hash:base64:5].[ext]',
-        //                     esModule: false,
-        //                 },
-        //             },
-        //         ],
-        //     })
-        //
-        //     return config
-        // },
         devIndicators: {
             autoPrerender: false // 静态优化指标
         },
         generateEtags: false,  // 禁止etag生成
         distDir: 'build',  // 自定义打包输出文件
         compress: true, // Next.js提供gzip压缩来压缩渲染的内容和静态文件  一般通过nginx来做gzip压缩
-        generateBuildId: async () => {
-            // next build在每台服务器上运行时，这可能会在多服务器部署中引起问题。为了在各个构建之间保留静态的构建ID，您可以提供自己的构建ID。
-            // You can, for example, get the latest git commit hash here
-            return 'my-build-id'
-        },
+        // generateBuildId: async () => {
+        //     // next build在每台服务器上运行时，这可能会在多服务器部署中引起问题。为了在各个构建之间保留静态的构建ID，您可以提供自己的构建ID。
+        //     // You can, for example, get the latest git commit hash here
+        //     return 'my-build-id'
+        // },
         typescript: {
             // !! WARN !!
             // Dangerously allow production builds to successfully complete even if

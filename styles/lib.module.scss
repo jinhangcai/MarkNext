@@ -1,0 +1,58 @@
+// 垂直渐变背景
+@mixin linear_gradient($startColor, $endColor) {
+  background: -webkit-linear-gradient(top, $startColor, $endColor); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(bottom, $startColor, $endColor); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(bottom, $startColor, $endColor); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to bottom, $startColor, $endColor); /* 标准的语法 */
+}
+
+// 水平渐变背景
+@mixin linear_gradient_x($startColor, $endColor) {
+  background: -webkit-linear-gradient(left, $startColor, $endColor); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right, $startColor, $endColor); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right, $startColor, $endColor); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right, $startColor, $endColor); /* 标准的语法 */
+}
+
+// 现代浏览器滚动条
+@mixin modern_scroll($width:4px, $background:#94999c) {
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+  &::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+    //border-radius: 2px;
+    background: $background;
+  }
+  &::-webkit-scrollbar-track { /*滚动条里面轨道*/
+    //border-radius: 2px;
+    background: transparent;
+  }
+}
+
+// 鼠标hover显示蒙层效果
+// 添加该效果的目标元素需指定position属性
+@mixin hover_cover_effect($background:rgba(255,255,255,.15)) {
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: $background;
+  }
+}
+
+// 鼠标hover显示box-shadow
+@mixin hover_shadow_effect($background:rgba(0,0,0,.1)) {
+  box-shadow: 0 2px 7px 0 $background;
+}
+
+// 多行省略号
+@mixin multi_lines_ellipsis($lines) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  overflow: hidden;
+}

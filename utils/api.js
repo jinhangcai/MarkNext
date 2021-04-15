@@ -29,5 +29,39 @@ const URLS = {
         mockMethod: 'get',
         mockUrl: '/1181/api/studyprod/home/famousTeacher',
     },
+    getTopBanner: {
+        method: 'get',
+        url: `/api/oms/banner/front/getBanner`,
+        // url: 'http://yapi.235.mistong.com/mock/658/api/oms/banner/front/getBanner',
+        mockMethod: 'get',
+        mockUrl: '/658/api/oms/banner/front/getBanner',
+    },
+    getTopRankList: {
+        method: 'get',
+        url: '/api/studyprod/home/hotCourseAndUpdateLesson',
+        // url: 'http://yapi.235.mistong.com/mock/1181/api/studyprod/home/hotCourseAndUpdateLesson',
+        mockMethod: 'get',
+        mockUrl: '/1181/api/studyprod/home/hotCourseAndUpdateLesson',
+    },
+    getLessonCount: {
+        method: 'get',
+        // url: 'http://yapi.235.mistong.com/mock/1181/api/studyprod/course/lesson/count',
+        url: '/api/studyprod/course/lesson/count',
+        mockMethod: 'get',
+        mockUrl: '/1181/api/studyprod/course/lesson/count',
+    },
+    getSubjectList: {
+        method: 'get',
+        url: '/api/studyprod/web/subject/list',
+        mockMethod: 'get',
+        mockUrl: '/1181/api/studyprod/web/subject/list',
+    },
+    getHotKeywordList: {
+        method: 'get',
+        // url: 'http://yapi.235.mistong.com/mock/1181/api/studyprod/search/hot/words',
+        url: '/api/studyprod/search/hot/words',
+        mockMethod: 'get',
+        mockUrl: '/1181/api/studyprod/search/hot/words',
+    },
 };
 export default generator(URLS);

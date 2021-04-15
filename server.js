@@ -1,13 +1,13 @@
 const express = require('express')
 const next = require('next')
-const http = require('http')
+// const http = require('http')
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
-const { createProxyMiddleware  } = require('http-proxy-middleware')
+require('events').EventEmitter.defaultMaxListeners = 15;
 // ng=>node=>axios请求=>node代理=>出数据
 // ng=>node=>axios=>出数据
-const {info, error}  = require('./log4js')
+// const {info, error}  = require('./log4js')
 const devProxy = {
     '/customerApi': {
         target: 'http://gateway.ewt360.com/', // 端口自己配置合适的
@@ -37,8 +37,13 @@ app.prepare().then(() => {
     //     app.render(req, res, actualPage, queryParams)
     // })
     //
+    // server.use('/About/:id', function (req, res, next) {
+    //     console.log('Time:', server);
+    //     next();
+    // });
     server.use('*', function (req, res, next) {
         // console.log('express', req)
+        // console.log('进入server111')
         try {
             // info('请求成功', req)
         } catch (e) {

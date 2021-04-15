@@ -23,9 +23,13 @@ import { getBaseURL } from '@mcansh/next-now-base-url';
 // 开发模式与生产模式 每次进入页面 都会执行 getServerSideProps
 export default function About(data) {
     const { data: name } = data;
+    const demo = async () => {
+        console.log('base', 'fdsafasfs')
+        var data1 = await api.getHomeLiveBanner({});
+    }
     return (
         <div className={style.content}>
-            {name}
+           <div onClick={() => { demo() }}> {name}</div>
             <Link href="/">
                 <a>Index Page</a>
             </Link>
@@ -36,11 +40,14 @@ export default function About(data) {
 export const getServerSideProps = async content => {
     // ...
     let data = '123'
-    var data1 = await api.getHomeLiveBanner(content, {});
-    const base = getBaseURL(content.req);
-    console.log('base', base)
-    console.log('跳转')
-    // const useRouter1 = useRouter();
+    try {
+        var data1 = await api.getHomeLiveBanner(content, {});
+        const base = getBaseURL(content.req);
+        // const useRouter1 = useRouter();
+    } catch (e) {
+
+    }
+
     return {
         props: {
             data
